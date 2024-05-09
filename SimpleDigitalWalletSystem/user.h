@@ -1,27 +1,44 @@
-#include <string>
-#include <vector>
-#include "transaction.h"
+#ifndef USER_H
+#define USER_H
 
-using namespace std;
+#include <string>
+#include <unordered_map>
+#include "TransactionManager.h"
 
 class User {
 private:
-	string username;
-	string password;
-	double balance;
-	vector<Transaction> transactionHistory;
+    std::string username;
+    std::string password;
+    double balance;
+    bool isAdmin = false;
+    bool isSuspended = false;
+    std::queue<Transaction> transactionHistory;
 
 public:
-	User(const string& username, const string& password, double initialBalance);
+    User() : username(""), password(""), balance(0.0) {}
+    User(const std::string& username, const std::string& password, double initialBalance);
 
-	string getUsername() const;
-	double getBalance() const;
-	vector<Transaction> getTransactionHistory() const;
+    bool getIsAdmin() const;
+    bool getIsSuspended() const;
+    std::string getUsername() const;
+    std::string getPassword() const;
+    double getBalance() const;
+    std::queue<Transaction> getTransactionHistory() const;
 
-	bool authenticate(const string& passwordInput) const;
-	bool sendMoney(const string& recipient, double amount);
-	bool requestMoney(const string& sender, double amount);
-	void updateBalance(double amount, const string& transactionType);
-	void addToTransactionHistory(const Transaction& transaction);
+    void setBalance(double newBalance);
+    void setPassword(const std::string& newPassword);
 
+    bool authenticate(const std::string& passwordInput) const;
+    bool sendMoney(const std::string& recipient, double amount, std::unordered_map<std::string, User>& users);
+    bool requestMoney(const std::string& sender, double amount, std::unordered_map<std::string, User>& users);
+    void updateBalance(double amount, const std::string& transactionType);
+    void addToTransactionHistory(const Transaction& transaction);
+
+    // Admin Functions
+    static void viewAllUsers(const std::unordered_map<std::string, User>& users);
+    static bool editUser(const std::string& username, double newBalance, std::unordered_map<std::string, User>& users);
+    static bool deleteUser(const std::string& username, std::unordered_map<std::string, User>& users);
+    static bool suspendUser(const std::string& username, std::unordered_map<std::string, User>& users);
 };
+
+#endif // USER_H

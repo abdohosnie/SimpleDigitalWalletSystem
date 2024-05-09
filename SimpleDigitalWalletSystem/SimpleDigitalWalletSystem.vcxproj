@@ -128,23 +128,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="authentication.cpp" />
-    <ClCompile Include="balance_management.cpp" />
-    <ClCompile Include="file_handler.cpp" />
+    <ClCompile Include="AuthenticationManager.cpp" />
+    <ClCompile Include="BalanceManager.cpp" />
+    <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="transaction.cpp" />
-    <ClCompile Include="user.cpp" />
-    <ClCompile Include="user_management.cpp" />
+    <ClCompile Include="Transaction.cpp" />
+    <ClCompile Include="TransactionManager.cpp" />
+    <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="admin_functionalities.cpp" />
-    <ClInclude Include="admin_functionalities.h" />
-    <ClInclude Include="authentication.h" />
-    <ClInclude Include="balance_management.h" />
-    <ClInclude Include="file_handler.h" />
-    <ClInclude Include="transaction.h" />
-    <ClInclude Include="user.h" />
-    <ClInclude Include="user_management.h" />
+    <ClInclude Include="AuthenticationManager.h" />
+    <ClInclude Include="BalanceManager.h" />
+    <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="Transaction.h" />
+    <ClInclude Include="TransactionManager.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="UserManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
