@@ -28,10 +28,10 @@ int main() {
         std::cout << "Data loaded successfully " << endl;
     }
     else {
-        // Failed to load user data
         std::cerr << "Error: Failed to load user data." << std::endl;
     }
 
+    std::string currentUser = "";
     
     while (true) {
         
@@ -80,6 +80,7 @@ int main() {
         
             if (AuthenticationManager::loginUser(username, password,filename)) {
                 loggedIn = true;
+                currentUser = username;
                 cout << "Login successful." << endl;
             }
             else {
@@ -114,7 +115,18 @@ int main() {
             switch (userChoice) {
             case 1:
                 // View Profile
-
+            {
+                auto it = userTable.find(currentUser);
+                if (it != userTable.end()) {
+                    const User& user = it->second;
+                    std::cout << "Username: " << user.getUsername() << std::endl;
+                    std::cout << "Balance: " << user.getBalance() << std::endl;
+                    std::cout << "Account Status: " << (user.getIsSuspended() ? "Suspended" : "Active") << std::endl;
+                }
+                else {
+                    std::cerr << "Error: Current user not found." << std::endl;
+                }
+            }
                 break;
             case 2:
                 // Edit Profile
@@ -147,6 +159,5 @@ int main() {
             }
         }
     }
-
     return 0;
 }

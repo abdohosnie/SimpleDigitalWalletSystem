@@ -1,5 +1,6 @@
 #include "FileHandler.h"
 #include <iostream>
+#include <sstream>
 
 bool FileHandler::saveUserData(const std::string& filename, const std::unordered_map<std::string, User>& userTable) {
     std::ofstream outFile(filename);
@@ -8,8 +9,10 @@ bool FileHandler::saveUserData(const std::string& filename, const std::unordered
         return false;
     }
 
-    for (const auto& pair : userTable) {
-        outFile << pair.first << " " << pair.second.getPassword() << " " << pair.second.getBalance() << "\n";
+    for (const auto& entry : userTable) {
+        const User& user = entry.second;
+        outFile << user.getUsername() << " " << user.getPassword() << " " << user.getBalance()
+            << " " << user.getIsAdmin() << " " << user.getIsSuspended() << "\n";
     }
 
     outFile.close();
@@ -32,8 +35,12 @@ bool FileHandler::loadUserData(const std::string& filename, std::unordered_map<s
         std::string username;
         std::string password;
         double balance;
-        ss >> username >> password >> balance;
+        bool isAdmin = false;
+        bool isSuspended = false;
+        ss >> username >> password >> balance >> isAdmin >> isSuspended;
         userTable[username] = User(username, password, balance);
+        userTable[username].setIsAdmin(isAdmin);
+        userTable[username].setIsSuspended(isSuspended);
     }
 
     inFile.close();

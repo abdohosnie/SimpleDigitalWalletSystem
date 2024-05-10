@@ -1,8 +1,10 @@
 #include "User.h"
 #include <iostream>
+#include "FileHandler.h"
 
-User::User(const std::string& username, const std::string& password, double initialBalance)
-    : username(username), password(password), balance(initialBalance), isAdmin(false), isSuspended(false) {}
+User::User(const std::string& username, const std::string& password, double initialBalance, bool isAdmin, bool isSuspended)
+    : username(username), password(password), balance(initialBalance), isAdmin(isAdmin), isSuspended(isSuspended) {}
+
 
 bool User::getIsAdmin() const {
     return isAdmin;
@@ -34,6 +36,15 @@ void User::setBalance(double newBalance) {
 
 void User::setPassword(const std::string& newPassword) {
     password = newPassword;
+}
+
+void User::setIsSuspended(bool suspended) {
+    isSuspended = suspended;
+}
+
+void User::setIsAdmin(bool admin)
+{
+    isAdmin = admin;
 }
 
 bool User::authenticate(const std::string& passwordInput) const {
@@ -149,7 +160,8 @@ bool User::deleteUser(const std::string& username, std::unordered_map<std::strin
 bool User::suspendUser(const std::string& username, std::unordered_map<std::string, User>& users) {
     auto it = users.find(username);
     if (it != users.end()) {
-        it->second.isSuspended = true;
+        it->second.setIsSuspended(true);
+        FileHandler::saveUserData("userdata.txt", users);
         std::cout << "User account suspended successfully.\n";
         return true;
     }
@@ -158,6 +170,7 @@ bool User::suspendUser(const std::string& username, std::unordered_map<std::stri
         return false;
     }
 }
+
 
 //void User::viewAllTransactions(const std::unordered_map<std::string, User>& users) {
 //    std::cout << "All Transactions:\n";

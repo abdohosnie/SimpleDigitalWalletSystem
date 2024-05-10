@@ -1,11 +1,10 @@
-#pragma once
+#ifndef FILE_HANDLER_H
+#define FILE_HANDLER_H
+
 #include <string>
-#include <vector>
+#include <fstream>
 #include <unordered_map>
 #include "User.h"
-#include <fstream>
-#include <sstream>
-
 
 class FileHandler {
 public:
@@ -16,3 +15,5 @@ public:
     //static bool loadTransactions(const std::string& filename, std::queue<Transaction>& transactions);
 
 };
+
+#endif // FILE_HANDLER_H
