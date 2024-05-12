@@ -129,7 +129,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AuthenticationManager.cpp" />
-    <ClCompile Include="BalanceManager.cpp" />
     <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Transaction.cpp" />
@@ -139,7 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AuthenticationManager.h" />
-    <ClInclude Include="BalanceManager.h" />
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="Transaction.h" />
     <ClInclude Include="TransactionManager.h" />

@@ -40,6 +40,7 @@ public:
     static bool editUser(const std::string& username, double newBalance, std::unordered_map<std::string, User>& users);
     static bool deleteUser(const std::string& username, std::unordered_map<std::string, User>& users);
     static bool suspendUser(const std::string& username, std::unordered_map<std::string, User>& users);
+    static bool adminUpdateBalance(const std::string& username, double newBalance, std::unordered_map<std::string, User>& users);
 };
 
 #endif // USER_H

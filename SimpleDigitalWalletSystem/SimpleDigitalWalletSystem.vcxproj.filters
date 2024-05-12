@@ -30,9 +30,6 @@
     <ClCompile Include="UserManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BalanceManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BalanceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Transaction.h">

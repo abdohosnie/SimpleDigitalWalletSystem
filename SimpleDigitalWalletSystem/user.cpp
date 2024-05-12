@@ -5,7 +5,6 @@
 User::User(const std::string& username, const std::string& password, double initialBalance, bool isAdmin, bool isSuspended)
     : username(username), password(password), balance(initialBalance), isAdmin(isAdmin), isSuspended(isSuspended) {}
 
-
 bool User::getIsAdmin() const {
     return isAdmin;
 }
@@ -53,15 +52,19 @@ bool User::authenticate(const std::string& passwordInput) const {
 
 bool User::sendMoney(const std::string& recipient, double amount, std::unordered_map<std::string, User>& users) {
     if (balance >= amount) {
-        balance -= amount;
+        balance -= amount; // Deduct amount from sender's balance
 
         auto it = users.find(recipient);
         if (it != users.end()) {
+            // Update recipient's balance
             it->second.updateBalance(amount, "Received");
+
+            // Add transaction records for sender and recipient
             Transaction sentTransaction(username, recipient, amount, "Sent");
             addToTransactionHistory(sentTransaction);
             Transaction receivedTransaction(username, recipient, amount, "Received");
             it->second.addToTransactionHistory(receivedTransaction);
+
             return true;
         }
         else {
@@ -100,19 +103,19 @@ bool User::requestMoney(const std::string& sender, double amount, std::unordered
 }
 
 void User::updateBalance(double amount, const std::string& transactionType) {
-    if (transactionType == "Deposit") {
-        balance += amount;
-        Transaction depositTransaction(username, "Self", amount, "Deposit");
-        addToTransactionHistory(depositTransaction);
-    }
-    else if (transactionType == "Withdrawal") {
-        if (balance >= amount) {
+    if (transactionType == "Sent" || transactionType == "Received") {
+        if (transactionType == "Sent" && balance >= amount) {
             balance -= amount;
-            Transaction withdrawalTransaction(username, "Self", amount, "Withdrawal");
-            addToTransactionHistory(withdrawalTransaction);
+            Transaction sentTransaction(username, "Self", amount, "Sent");
+            addToTransactionHistory(sentTransaction);
+        }
+        else if (transactionType == "Received") {
+            balance += amount;
+            Transaction receivedTransaction(username, "Self", amount, "Received");
+            addToTransactionHistory(receivedTransaction);
         }
         else {
-            std::cout << "Not enough funds. Withdrawal failed." << std::endl;
+            std::cout << "Not enough funds to complete the transaction." << std::endl;
         }
     }
     else {
@@ -171,6 +174,14 @@ bool User::suspendUser(const std::string& username, std::unordered_map<std::stri
     }
 }
 
+bool User::adminUpdateBalance(const std::string& username, double newBalance, std::unordered_map<std::string, User>& users) {
+    auto it = users.find(username);
+    if (it != users.end()) {
+        it->second.updateBalance(newBalance, "Admin Update");
+        return true;
+    }
+    return false;
+}
 
 //void User::viewAllTransactions(const std::unordered_map<std::string, User>& users) {
 //    std::cout << "All Transactions:\n";

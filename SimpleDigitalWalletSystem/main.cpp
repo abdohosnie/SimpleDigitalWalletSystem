@@ -3,7 +3,6 @@
 #include <vector>
 #include <unordered_map>
 #include "AuthenticationManager.h"
-#include "BalanceManager.h"
 #include "FileHandler.h"
 #include "Transaction.h"
 #include "TransactionManager.h"
@@ -21,21 +20,20 @@ int main() {
     string filename = "Database/userdata.txt";
     //string filename = "Database/transactionsdata.txt";
 
-    vector<User> users;
     bool loggedIn = false;
 
     if (fileHandler.loadUserData(filename, userTable)) {
-        std::cout << "Data loaded successfully " << endl;
+        cout << "Data loaded successfully " << endl;
     }
     else {
-        std::cerr << "Error: Failed to load user data." << std::endl;
+        cerr << "Error: Failed to load user data." << endl;
     }
 
-    std::string currentUser = "";
+    string currentUser = "";
     
     while (true) {
         
-        cout << "Welcome to User Management System" << endl;
+        cout << "\nWelcome to User Management System" << endl;
         cout << "1. Register new user" << endl;
         cout << "2. Login" << endl;
         cout << "3. Exit" << endl;
@@ -48,23 +46,23 @@ int main() {
         switch (choice) {
         case 1: {
             // Register a new user
-            std::string newUsername;
-            std::string newPassword;
+            string newUsername;
+            string newPassword;
             double initialBalance;
 
-            std::cout << "Enter username: ";
-            std::cin >> newUsername;
-            std::cout << "Enter password: ";
-            std::cin >> newPassword;
-            std::cout << "Enter initial balance: ";
-            std::cin >> initialBalance;
+            cout << "Enter username: ";
+            cin >> newUsername;
+            cout << "Enter password: ";
+            cin >> newPassword;
+            cout << "Enter initial balance: ";
+            cin >> initialBalance;
 
             // Register the new user
             if (userManager.registerUser(newUsername, newPassword, initialBalance, userTable, filename)) {
-                std::cout << "User registered successfully." << std::endl;
+                cout << "User registered successfully." << endl;
             }
             else {
-                std::cerr << "Failed to register user." << std::endl;
+                cerr << "Failed to register user." << endl;
             }
             break;
         }
@@ -100,12 +98,11 @@ int main() {
         while (loggedIn) {
             cout << "\nUser Menu" << endl;
             cout << "1. View Profile" << endl;
-            cout << "2. Edit Profile" << endl;
-            cout << "3. Change Password" << endl;
-            cout << "4. Send Money" << endl;
-            cout << "5. Request Money" << endl;
-            cout << "6. View Transactions" << endl;
-            cout << "7. Logout" << endl;
+            cout << "2. Change Password" << endl;
+            cout << "3. Send Money" << endl;
+            cout << "4. Request Money" << endl;
+            cout << "5. View Transactions" << endl;
+            cout << "6. Logout" << endl;
             cout << "Enter your choice: ";
 
             int userChoice;
@@ -119,36 +116,89 @@ int main() {
                 auto it = userTable.find(currentUser);
                 if (it != userTable.end()) {
                     const User& user = it->second;
-                    std::cout << "Username: " << user.getUsername() << std::endl;
-                    std::cout << "Balance: " << user.getBalance() << std::endl;
-                    std::cout << "Account Status: " << (user.getIsSuspended() ? "Suspended" : "Active") << std::endl;
+
+                    cout << "\n\tUser Profile" << endl;
+                    cout << "\tUsername: " << user.getUsername() << endl;
+                    cout << "\tBalance: " << user.getBalance() << endl;
+                    cout << "\tAccount Status: " << (user.getIsSuspended() ? "Suspended" : "Active") << endl;
                 }
                 else {
-                    std::cerr << "Error: Current user not found." << std::endl;
+                    cerr << "Error: Current user not found." << endl;
                 }
             }
                 break;
             case 2:
-                // Edit Profile
-                
+                // Change Password
+            {
+                // Get the current user from the userTable
+                auto it = userTable.find(currentUser);
+                if (it != userTable.end()) {
+                    string currentPassword, newPassword;
+                    cout << "Enter current password: ";
+                    cin >> currentPassword;
+                    cout << "Enter new password: ";
+                    cin >> newPassword;
+
+                    userManager.editUserProfile(currentUser, currentPassword, newPassword, userTable, filename);
+                }
+            }
                 break;
             case 3:
-                // Change Password
-                
+                // Send Money
+            {
+                string recipient;
+                double amount;
+                cout << "Enter recipient username: ";
+                cin >> recipient;
+                cout << "Enter amount to send: ";
+                cin >> amount;
+
+                auto senderIt = userTable.find(currentUser);
+                if (senderIt != userTable.end()) {
+                    User& sender = senderIt->second;
+                    if (sender.sendMoney(recipient, amount, userTable)) {
+                        cout << "Money sent successfully.\n";
+                    }
+                    else {
+                        cout << "Failed to send money.\n";
+                    }
+                }
+                else {
+                    cout << "Error: Sender not found.\n";
+                }
+
+            }
                 break;
             case 4:
-                // Send Money
-                
-                break;
-            case 5:
                 // Request Money
                 
                 break;
+            case 5:
+            {
+                auto it = userTable.find(currentUser);
+                if (it != userTable.end()) {
+                    const User& user = it->second;
+
+                    cout << "\n\t(---{ Transaction History }---)\n";
+                    auto transactions = user.getTransactionHistory();
+
+                    while (!transactions.empty()) {
+                        Transaction transaction = transactions.front();
+                        transactions.pop();
+
+                        cout << "\tSender: " << transaction.getSenderUsername() << endl;
+                        cout << "\tRecipient: " << transaction.getRecipientUsername() << endl;
+                        cout << "\tAmount: " << transaction.getAmount() << endl;
+                        cout << "\tType: " << transaction.getTransactionType() << endl;
+                        cout << "\t--------------------------\n";
+                    }
+                }
+                else {
+                    cerr << "Error: Current user not found." << endl;
+                }
+            }
+            break;
             case 6:
-                // View Transactions
-                
-                break;
-            case 7:
                 // Logout
                 loggedIn = false;
                 cout << "Logged out successfully." << endl;
